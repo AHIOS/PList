@@ -14,3 +14,11 @@ struct Pokemon : Codable{
         return Int((url as NSString).lastPathComponent)!
         }
 }
+
+struct PokemonList : Codable{
+    var count : Int
+    var next: String?
+    var previous: String?
+    var results : Array<Pokemon>
+    
+}

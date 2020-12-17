@@ -30,27 +30,40 @@ class PokemonTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "pokemonCell", for: indexPath)
         let item = pokemons[indexPath.row]
+        
         cell.textLabel?.text = "\(item.id) - \(item.name.capitalized)"
+        
+        cell.imageView?.tag = -1
+        cell.imageView?.image = UIImage(named: "placeholder")
         let imageURL = URL(string: "https://pokeres.bastionbot.org/images/pokemon/\(item.id).png")
+        
         getImageData(from: imageURL!) { data, response, error in
                 guard let data = data, error == nil else { return }
                 DispatchQueue.main.async() {
                     let img = UIImage(data: data)
-                    cell.imageView?.image = img
-                    cell.setNeedsLayout()
+                    if let thisCell = tableView.cellForRow(at: indexPath),
+                       thisCell.imageView?.tag == -1 {
+                        thisCell.imageView?.image = img
+                        thisCell.imageView?.tag = -1
+                        thisCell.setNeedsLayout()
+                    }
                 }
             }
         return cell
     }
     
     private func loadData(){
-        let pk = Pokemon(name: "Ditto", url: "https://pokeapi.co/api/v2/pokemon/132")
-        pokemons.append(pk)
-        self.refreshUI()
+        DataRetriever.fetchList { pList in
+            let fetched = pList.results
+            self.pokemons.append(contentsOf: fetched)
+            self.refreshUI()
+        }
     }
     
     func refreshUI(){
-        self.tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     func getImageData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {

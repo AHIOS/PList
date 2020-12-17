@@ -16,6 +16,7 @@
 		2CDF31AB258BDCF1003960E6 /* PListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF31AA258BDCF1003960E6 /* PListUITests.swift */; };
 		2CF2B9FD258BFBCE006303AE /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2B9FC258BFBCE006303AE /* Pokemon.swift */; };
 		2CF2BA06258BFD1D006303AE /* PokemonTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2BA05258BFD1D006303AE /* PokemonTableViewController.swift */; };
+		2CF2BA12258C0917006303AE /* DataRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2BA11258C0917006303AE /* DataRetriever.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		2CDF31AC258BDCF1003960E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CF2B9FC258BFBCE006303AE /* Pokemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pokemon.swift; sourceTree = "<group>"; };
 		2CF2BA05258BFD1D006303AE /* PokemonTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonTableViewController.swift; sourceTree = "<group>"; };
+		2CF2BA11258C0917006303AE /* DataRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRetriever.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 		2CDF3187258BDCEF003960E6 /* PList */ = {
 			isa = PBXGroup;
 			children = (
+				2CF2BA10258C08DB006303AE /* DataManager */,
 				2CF2B9FB258BFBBF006303AE /* Model */,
 				2CF2BA04258BFCE6006303AE /* VC */,
 				2CDF3188258BDCEF003960E6 /* AppDelegate.swift */,
@@ -145,6 +148,14 @@
 				2CF2BA05258BFD1D006303AE /* PokemonTableViewController.swift */,
 			);
 			path = VC;
+			sourceTree = "<group>";
+		};
+		2CF2BA10258C08DB006303AE /* DataManager */ = {
+			isa = PBXGroup;
+			children = (
+				2CF2BA11258C0917006303AE /* DataRetriever.swift */,
+			);
+			path = DataManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,6 +292,7 @@
 				2CF2BA06258BFD1D006303AE /* PokemonTableViewController.swift in Sources */,
 				2CDF3189258BDCEF003960E6 /* AppDelegate.swift in Sources */,
 				2CDF318B258BDCEF003960E6 /* SceneDelegate.swift in Sources */,
+				2CF2BA12258C0917006303AE /* DataRetriever.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
