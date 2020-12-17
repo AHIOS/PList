@@ -10,6 +10,12 @@ import UIKit
 class PokemonTableViewController: UITableViewController {
     var pokemons: Array<Pokemon> = []
     
+    //pagination
+    var limit = 200
+    var offset = 0
+    var isFetching = true
+    var isFullyLoaded = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Pokémon list"
@@ -35,28 +41,43 @@ class PokemonTableViewController: UITableViewController {
         
         cell.imageView?.tag = -1
         cell.imageView?.image = UIImage(named: "placeholder")
-        let imageURL = URL(string: "https://pokeres.bastionbot.org/images/pokemon/\(item.id).png")
+        DataRetriever.getImageDataForItem(id: item.id, completion: { data, response, error in
+            guard let data = data, error == nil else { return }
+            self.refreshAvatar(at: indexPath.row, with: data)
+        })
         
-        getImageData(from: imageURL!) { data, response, error in
-                guard let data = data, error == nil else { return }
-                DispatchQueue.main.async() {
-                    let img = UIImage(data: data)
-                    if let thisCell = tableView.cellForRow(at: indexPath),
-                       thisCell.imageView?.tag == -1 {
-                        thisCell.imageView?.image = img
-                        thisCell.imageView?.tag = -1
-                        thisCell.setNeedsLayout()
-                    }
-                }
-            }
+        //load new data
+        if !isFetching, indexPath.row == pokemons.count-5{
+            loadData()
+        }
+
         return cell
     }
     
     private func loadData(){
-        DataRetriever.fetchList { pList in
+        if isFullyLoaded { return }
+        isFetching = true
+        DataRetriever.fetchList(limit: limit, offset:offset){ pList in
             let fetched = pList.results
             self.pokemons.append(contentsOf: fetched)
             self.refreshUI()
+            self.offset += fetched.count
+            self.isFetching = false
+            if fetched.count < self.limit {
+                self.isFullyLoaded = true
+            }
+        }
+    }
+    
+    private func refreshAvatar(at rowIndex:Int, with data:Data){
+        DispatchQueue.main.async() {
+            let img = UIImage(data: data)
+            if let thisCell = self.tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0)),
+               thisCell.imageView?.tag == -1 {
+                thisCell.imageView?.image = img
+                thisCell.imageView?.tag = -1
+                thisCell.setNeedsLayout()
+            }
         }
     }
     
@@ -65,9 +86,6 @@ class PokemonTableViewController: UITableViewController {
             self.tableView.reloadData()
         }
     }
-    
-    func getImageData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
-    }
 
 }
+
