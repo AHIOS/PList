@@ -16,11 +16,27 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = pokemon!.name
+        navigationItem.largeTitleDisplayMode = .never
+        loadData()
 
         // Do any additional setup after loading the view.
     }
     
-
+    private func loadData(){
+        if let itemId = pokemon?.id{
+            DataRetriever.fetchItem(id: itemId) { pokemon in
+                DispatchQueue.main.async() {
+                    let textLbl = UILabel(frame: self.view.frame)
+                    textLbl.numberOfLines = 0
+                    textLbl.text = "\(pokemon["name"] as! String)\n\(String(describing: pokemon["abilities"]))"
+                    self.view.addSubview(textLbl)
+                    textLbl.sizeToFit()
+                    textLbl.center = self.view.center
+                }
+            }
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

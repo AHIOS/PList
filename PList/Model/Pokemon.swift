@@ -12,7 +12,7 @@ struct Pokemon : Codable{
     var url: String
     var id: Int {
         return Int((url as NSString).lastPathComponent)!
-        }
+    }
 }
 
 struct PokemonList : Codable{
@@ -20,5 +20,4 @@ struct PokemonList : Codable{
     var next: String?
     var previous: String?
     var results : Array<Pokemon>
-    
 }

@@ -24,6 +24,7 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
         super.viewDidLoad()
         title = "Pokémon list"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
         loadData()
     }
 

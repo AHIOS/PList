@@ -9,9 +9,9 @@
 	
 ### 2. [ ] Improve architecture
 	- [x] Add coordinator for navigation
-	- [ ] Add cache
+	- [x] Add cache
 	- [ ] Adopt a better pattern (eg. MVVM)
-	- [ ] Implent detailView
+	- [ ] Implement detailView
 	- [ ] Add State management
 
 ### 3. [ ] Improve UI/UX
