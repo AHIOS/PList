@@ -1,14 +1,14 @@
 # PList
 ## Task list
-### 1. [ ] Do a plain mvc POC
+### 1. [x] Do a plain mvc POC
 
 	- [x] Start with a singleview app
 	- [x] Grab data with network calls
 	- [x] Show data in a tableview
-	- [ ] Pagination
+	- [x] Pagination
 	
 ### 2. [ ] Improve architecture
-	- [ ] Add coordinator for navigation
+	- [x] Add coordinator for navigation
 	- [ ] Add cache
 	- [ ] Adopt a better pattern (eg. MVVM)
 	- [ ] Implent detailView

@@ -7,10 +7,14 @@
 
 import UIKit
 
-class PokemonTableViewController: UITableViewController {
+class PokemonTableViewController: UITableViewController, Storyboarded {
+    //Datasource
     var pokemons: Array<Pokemon> = []
     
-    //pagination
+    //Navigation
+    weak var coordinator: MainCoordinator?
+    
+    //Pagination
     var limit = 200
     var offset = 0
     var isFetching = true
@@ -85,6 +89,12 @@ class PokemonTableViewController: UITableViewController {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+    }
+    
+    // MARK: - Table view delegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let pokemon = pokemons[indexPath.row]
+        coordinator?.showDetail(item: pokemon)
     }
 
 }
