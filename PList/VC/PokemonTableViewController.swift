@@ -9,7 +9,8 @@ import UIKit
 
 class PokemonTableViewController: UITableViewController, Storyboarded {
     //Datasource
-    var pokemons: Array<Pokemon> = []
+//    var pokemons: Array<Pokemon> = []
+    var pokemonVMs: Array<PokemonViewModel> = []
     
     //Navigation
     weak var coordinator: MainCoordinator?
@@ -25,6 +26,7 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
         title = "Pokémon list"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        tableView.register(UINib(nibName: "PokemonTableCellView", bundle: .main), forCellReuseIdentifier: "pokemonCell")
         loadData()
     }
 
@@ -35,28 +37,38 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return pokemons.count
+        return pokemonVMs.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "pokemonCell", for: indexPath)
-        let item = pokemons[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "pokemonCell", for: indexPath) as! PokemonTableCellView
+        let item = pokemonVMs[indexPath.row]
         
-        cell.textLabel?.text = "\(item.id) - \(item.name.capitalized)"
+//        cell.textLabel?.text = "\(item.id) - \(item.name.capitalized)"
+        cell.nameLbl?.text = "\(item.name.capitalized)"
         
-        cell.imageView?.tag = -1
-        cell.imageView?.image = UIImage(named: "placeholder")
-        DataRetriever.getImageDataForItem(id: item.id, completion: { data, response, error in
-            guard let data = data, error == nil else { return }
+        cell.avatar?.tag = -1
+        cell.avatar?.image = UIImage(named: "placeholder")
+        cell.idLbl?.text = "\(item.idLblStr)"
+        
+//        cell.avatar?.layer.borderWidth = 2
+//        cell.avatar?.layer.borderColor = UIColor.red.cgColor
+        
+        DataRetriever.getImageDataForItem(id: item.id, completion: { data in
+            guard let data = data else { return }
             self.refreshAvatar(at: indexPath.row, with: data)
         })
         
         //load new data
-        if !isFetching, indexPath.row == pokemons.count-5{
+        if !isFetching, indexPath.row == pokemonVMs.count-5{
             loadData()
         }
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 96
     }
     
     private func loadData(){
@@ -64,7 +76,10 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
         isFetching = true
         DataRetriever.fetchList(limit: limit, offset:offset){ pList in
             let fetched = pList.results
-            self.pokemons.append(contentsOf: fetched)
+            let vms = fetched.map { model -> PokemonViewModel in
+                return PokemonViewModel(with: model)
+            }
+            self.pokemonVMs.append(contentsOf: vms)
             self.refreshUI()
             self.offset += fetched.count
             self.isFetching = false
@@ -77,10 +92,10 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
     private func refreshAvatar(at rowIndex:Int, with data:Data){
         DispatchQueue.main.async() {
             let img = UIImage(data: data)
-            if let thisCell = self.tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0)),
-               thisCell.imageView?.tag == -1 {
-                thisCell.imageView?.image = img
-                thisCell.imageView?.tag = -1
+            if let thisCell = self.tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0)) as? PokemonTableCellView,
+               thisCell.avatar?.tag == -1 {
+                thisCell.avatar?.image = img
+                thisCell.avatar?.tag = -1
                 thisCell.setNeedsLayout()
             }
         }
@@ -94,7 +109,7 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
     
     // MARK: - Table view delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let pokemon = pokemons[indexPath.row]
+        let pokemon = pokemonVMs[indexPath.row]
         coordinator?.showDetail(item: pokemon)
     }
 

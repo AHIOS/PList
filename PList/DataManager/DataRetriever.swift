@@ -30,34 +30,59 @@ struct DataRetriever {
         }
     }
     
-    static func getImageDataForItem(id:Int, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-        if let imageURL = URL(string: "\(imageBaseUrl)\(id).png"){
-            URLSession.shared.dataTask(with: imageURL, completionHandler: completion).resume()}
-    }
-    
-    static func fetchItem(id:Int, completionHandler:@escaping ([String: Any])->()) {
+    static func getImageDataForItem(id:Int, completion: @escaping (Data?) -> ()) {
         do {
-            if let cached = try loadJSON(withFilename: "\(id)") {
-                print("LOADED FROM CACHE")
-                completionHandler(cached as! [String: Any])
+            if let cachedImg = try loadImage(named: "\(id)") {
+                debugPrint("\(id) LOADED FROM CACHE")
+                completion(cachedImg)
                 return
             }
         } catch {
             debugPrint("\(id) not cached")
         }
-        
-        
-        
+        if let imageURL = URL(string: "\(imageBaseUrl)\(id).png"){
+            URLSession.shared.dataTask(with: imageURL) { (data, res, err) in
+                //missing image from api returns utf8 data and no errors, so look also into http response code
+                if err == nil, data != nil, (res as? HTTPURLResponse)?.statusCode != 404{
+                    do {
+                        if (id == 412) {
+                            print("Missing IMAGE")
+                        }
+                        let saved = try saveImage(imgData: data!, to: "\(id)")
+                        if saved { debugPrint("SAVED image \(id)") }
+                        completion(data)
+                    } catch {
+                        debugPrint("Error Parsiong JSON")
+                    }
+                }
+                
+                
+            }.resume()
+        }
+    }
+    
+    static func fetchItem(id:Int, completionHandler:@escaping ([String: Any], String)->()) {
+        do {
+            if let cached = try loadJSON(withFilename: "\(id)") {
+                debugPrint("LOADED FROM CACHE")
+                let str = try loadJSONString(withFilename: "\(id)")
+                completionHandler(cached as! [String: Any], str!)
+                return
+            }
+        } catch {
+            debugPrint("\(id) not cached")
+        }
+
         if let itemUrl = URL(string: "\(baseurl)/pokemon/\(id)"){
             let session = URLSession.shared
             session.dataTask(with: itemUrl) { (data, resp, err) in
                 if err == nil, data != nil{
                     do {
                         if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-//                            print(json)
-                            let saved = try save(jsonObject: json, toFilename: "\(id)")
-                            if saved { print("SAVED") }
-                            completionHandler(json)
+                            let saved = try save(jsonObject: json, to: "\(id)")
+                            if saved { debugPrint("SAVED") }
+                            let jsonStr = String(decoding: data!, as: UTF8.self)
+                            completionHandler(json, jsonStr)
                         }
                     } catch {
                         debugPrint("Error Parsiong JSON")
@@ -79,8 +104,21 @@ struct DataRetriever {
             }
             return nil
         }
+    
+    static func loadJSONString(withFilename filename: String) throws -> String? {
+            let fm = FileManager.default
+            let urls = fm.urls(for: .documentDirectory, in: .userDomainMask)
+            if let url = urls.first {
+                var fileURL = url.appendingPathComponent(filename)
+                fileURL = fileURL.appendingPathExtension("json")
+                let data = try Data(contentsOf: fileURL)
+                let jsonStr = String(data: data, encoding: .utf8)
+                return jsonStr
+            }
+            return nil
+        }
         
-        static func save(jsonObject: Any, toFilename filename: String) throws -> Bool{
+        static func save(jsonObject: Any, to filename: String) throws -> Bool{
             let fm = FileManager.default
             let urls = fm.urls(for: .documentDirectory, in: .userDomainMask)
             if let url = urls.first {
@@ -94,5 +132,29 @@ struct DataRetriever {
             
             return false
         }
+    
+    static func saveImage(imgData:Data, to filename: String) throws ->Bool{
+        let fm = FileManager.default
+        let urls = fm.urls(for: .documentDirectory, in: .userDomainMask)
+        if let url = urls.first {
+            var fileURL = url.appendingPathComponent(filename)
+            fileURL = fileURL.appendingPathExtension("png")
+            print(fileURL)
+            try imgData.write(to: fileURL, options: [.atomicWrite])
+            return true
+        }
+        return false
+    }
+    static func loadImage(named: String) throws -> Data?{
+        let fm = FileManager.default
+        let urls = fm.urls(for: .documentDirectory, in: .userDomainMask)
+        if let url = urls.first {
+            var fileURL = url.appendingPathComponent(named)
+            fileURL = fileURL.appendingPathExtension("png")
+            let data = try Data(contentsOf: fileURL)
+            return data
+        }
+        return nil
+    }
 
 }

@@ -22,7 +22,7 @@ class MainCoordinator: Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
     
-    func showDetail(item: Pokemon) {
+    func showDetail(item: PokemonViewModel) {
         let vc = PokemonDetailViewController.instantiate()
         vc.pokemon = item
         vc.coordinator = self

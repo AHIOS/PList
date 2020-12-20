@@ -20,6 +20,9 @@
 		2CF2BA23258D3085006303AE /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2BA22258D3085006303AE /* Storyboarded.swift */; };
 		2CF2BA28258D313A006303AE /* PokemonDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2BA27258D313A006303AE /* PokemonDetailViewController.swift */; };
 		2CF2BA2D258D31FD006303AE /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2BA2C258D31FD006303AE /* MainCoordinator.swift */; };
+		2CF2BA38258E0CD4006303AE /* PokemonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2BA37258E0CD4006303AE /* PokemonViewModel.swift */; };
+		2CF2BA53258E7A74006303AE /* PokemonTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2BA51258E7A74006303AE /* PokemonTableCellView.swift */; };
+		2CF2BA54258E7A74006303AE /* PokemonTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CF2BA52258E7A74006303AE /* PokemonTableCellView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +62,9 @@
 		2CF2BA22258D3085006303AE /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		2CF2BA27258D313A006303AE /* PokemonDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailViewController.swift; sourceTree = "<group>"; };
 		2CF2BA2C258D31FD006303AE /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		2CF2BA37258E0CD4006303AE /* PokemonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonViewModel.swift; sourceTree = "<group>"; };
+		2CF2BA51258E7A74006303AE /* PokemonTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonTableCellView.swift; sourceTree = "<group>"; };
+		2CF2BA52258E7A74006303AE /* PokemonTableCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PokemonTableCellView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +118,8 @@
 				2CF2BA19258D2FC7006303AE /* Navigation */,
 				2CF2BA10258C08DB006303AE /* DataManager */,
 				2CF2B9FB258BFBBF006303AE /* Model */,
+				2CF2BA45258E79F0006303AE /* View */,
+				2CF2BA3C258E797D006303AE /* ViewModel */,
 				2CF2BA04258BFCE6006303AE /* VC */,
 				2CDF3188258BDCEF003960E6 /* AppDelegate.swift */,
 				2CDF318E258BDCEF003960E6 /* Main.storyboard */,
@@ -173,6 +181,23 @@
 				2CF2BA2C258D31FD006303AE /* MainCoordinator.swift */,
 			);
 			path = Navigation;
+			sourceTree = "<group>";
+		};
+		2CF2BA3C258E797D006303AE /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2CF2BA37258E0CD4006303AE /* PokemonViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2CF2BA45258E79F0006303AE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2CF2BA51258E7A74006303AE /* PokemonTableCellView.swift */,
+				2CF2BA52258E7A74006303AE /* PokemonTableCellView.xib */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CDF3195258BDCF1003960E6 /* LaunchScreen.storyboard in Resources */,
+				2CF2BA54258E7A74006303AE /* PokemonTableCellView.xib in Resources */,
 				2CDF3192258BDCF1003960E6 /* Assets.xcassets in Resources */,
 				2CDF3190258BDCEF003960E6 /* Main.storyboard in Resources */,
 			);
@@ -308,8 +334,10 @@
 				2CF2B9FD258BFBCE006303AE /* Pokemon.swift in Sources */,
 				2CF2BA06258BFD1D006303AE /* PokemonTableViewController.swift in Sources */,
 				2CF2BA1B258D2FEB006303AE /* Coordinator.swift in Sources */,
+				2CF2BA53258E7A74006303AE /* PokemonTableCellView.swift in Sources */,
 				2CDF3189258BDCEF003960E6 /* AppDelegate.swift in Sources */,
 				2CF2BA28258D313A006303AE /* PokemonDetailViewController.swift in Sources */,
+				2CF2BA38258E0CD4006303AE /* PokemonViewModel.swift in Sources */,
 				2CF2BA12258C0917006303AE /* DataRetriever.swift in Sources */,
 				2CF2BA2D258D31FD006303AE /* MainCoordinator.swift in Sources */,
 				2CF2BA23258D3085006303AE /* Storyboarded.swift in Sources */,
