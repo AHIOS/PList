@@ -61,12 +61,11 @@ struct DataRetriever {
         }
     }
     
-    static func fetchItem(id:Int, completionHandler:@escaping ([String: Any], String)->()) {
+    static func fetchItem(id:Int, completionHandler:@escaping ([String: Any])->()) {
         do {
             if let cached = try loadJSON(withFilename: "\(id)") {
                 debugPrint("LOADED FROM CACHE")
-                let str = try loadJSONString(withFilename: "\(id)")
-                completionHandler(cached as! [String: Any], str!)
+                completionHandler(cached as! [String: Any])
                 return
             }
         } catch {
@@ -80,9 +79,8 @@ struct DataRetriever {
                     do {
                         if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
                             let saved = try save(jsonObject: json, to: "\(id)")
-                            if saved { debugPrint("SAVED") }
-                            let jsonStr = String(decoding: data!, as: UTF8.self)
-                            completionHandler(json, jsonStr)
+                            if saved { debugPrint("saved") }
+                            completionHandler(json)
                         }
                     } catch {
                         debugPrint("Error Parsiong JSON")

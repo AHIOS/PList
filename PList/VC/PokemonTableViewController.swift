@@ -29,6 +29,9 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
         tableView.register(UINib(nibName: "PokemonTableCellView", bundle: .main), forCellReuseIdentifier: "pokemonCell")
         loadData()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.titleTextAttributes = nil
+    }
 
     // MARK: - Table view data source
 
@@ -109,8 +112,8 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
     
     // MARK: - Table view delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let pokemon = pokemonVMs[indexPath.row]
-        coordinator?.showDetail(item: pokemon)
+        let pokemonVM = pokemonVMs[indexPath.row]
+        coordinator?.showDetail(itemID: pokemonVM.id)
     }
 
 }

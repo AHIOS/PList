@@ -11,8 +11,8 @@
 	- [x] Add coordinator for navigation
 	- [x] Add cache
 	- [x] Adopt a better pattern (eg. MVVM)
-	- [ ] Implement detailView
-	- [ ] Add State management
+	- [x] Implement detailView
+	- [/] Add State management
 
 ### 3. [ ] Improve UI/UX
 	- [ ] Pick a dependency manager (cocoapods or carthage)

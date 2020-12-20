@@ -8,34 +8,57 @@
 import UIKit
 
 class PokemonDetailViewController: UIViewController, Storyboarded {
-    var pokemon: PokemonViewModel?
+    var pokemonId: Int?
+    var pokemonVM: PokemonDetailViewModel?{
+        didSet {
+            refreshUI()
+        }
+    }
+    var appeared = false
     
     //Navigation
     weak var coordinator: MainCoordinator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = pokemon!.name
         navigationItem.largeTitleDisplayMode = .never
         loadData()
-
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        appeared = false
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        appeared = true
     }
     
     private func loadData(){
-        if let itemId = pokemon?.id{
-            DataRetriever.fetchItem(id: itemId) { pokemonDict, pokeStr in
-                DispatchQueue.main.async() {
-                    self.pokemon?.model.details?.json = pokeStr
-                    let textLbl = UILabel(frame: self.view.frame)
-                    textLbl.numberOfLines = 0
-                    print(pokeStr)
-                    textLbl.text = "\(pokemonDict["name"] as! String)\n\(pokeStr.substring(to: 100))..."
-                    self.view.addSubview(textLbl)
-                    textLbl.sizeToFit()
-                    textLbl.center = self.view.center
+        if let itemId = pokemonId{
+            DataRetriever.fetchItem(id: itemId) { pokemonDict in
+                //if still transitioning delay the UI update
+                if (self.appeared){
+                    self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
+                }else{
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
+                    }
                 }
             }
+        }
+    }
+    
+    private func refreshUI(){
+        DispatchQueue.main.async {
+            self.title = self.pokemonVM?.name
+            let color = self.pokemonVM?.color
+            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: color!]
+            self.view.backgroundColor = color?.withAlphaComponent(0.75)
+            let textLbl = UILabel(frame: self.view.frame)
+            textLbl.numberOfLines = 0
+            textLbl.text = "\(String(describing: self.pokemonVM))"
+            self.view.addSubview(textLbl)
+            textLbl.sizeToFit()
+            textLbl.center = self.view.center
         }
     }
     
@@ -49,26 +72,4 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
     }
     */
 
-}
-
-extension String {
-    func index(from: Int) -> Index {
-        return self.index(startIndex, offsetBy: from)
-    }
-
-    func substring(from: Int) -> String {
-        let fromIndex = index(from: from)
-        return String(self[fromIndex...])
-    }
-
-    func substring(to: Int) -> String {
-        let toIndex = index(from: to)
-        return String(self[..<toIndex])
-    }
-
-    func substring(with r: Range<Int>) -> String {
-        let startIndex = index(from: r.lowerBound)
-        let endIndex = index(from: r.upperBound)
-        return String(self[startIndex..<endIndex])
-    }
 }

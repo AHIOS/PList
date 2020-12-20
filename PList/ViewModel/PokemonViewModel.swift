@@ -6,26 +6,86 @@
 //
 
 import Foundation
+import UIKit
 
 struct PokemonViewModel {
     let id: Int
-    let idLblStr: String
-    let name: String
-    var model: Pokemon
-//    let type: String?
-//    let abilities: [Ability]
-    
-    struct Ability{
-        let name: String
-        let value: Int
+    var idLblStr: String{
+        return "\(id)"
     }
+    let name: String
     
     init(with pokemon:Pokemon) {
         self.name = pokemon.name
-        self.idLblStr = "#\(pokemon.id)"
         self.id = pokemon.id
-        self.model = pokemon
-//        self.type = pokemon.details.json
+    }
+}
+
+struct PokemonDetailViewModel {
+    let id: Int
+    var idLblStr: String{
+        return "\(id)"
+    }
+    let name: String
+    var types = [String]()
+    var stats = [Stat]()
+    var abilities = [String]()
+    let height: Int
+    let weight: Int
+    
+    struct Stat{
+        let name: String
+        let value: Int
+        
+        init(with dict:[String:Any]) {
+            let subDict = dict["stat"] as! [String:Any]
+            name = subDict["name"] as! String
+            value = dict["base_stat"] as! Int
+        }
+    }
+    
+    init(with pokemonDict:[String: Any]) {
+        self.name = (pokemonDict["name"] as! String).capitalized
+        self.id = pokemonDict["id"] as! Int
+        for statDict in pokemonDict["stats"] as! [[String: Any]] {
+            let newStat = Stat(with:statDict)
+            self.stats.append(newStat)
+        }
+        for ability in pokemonDict["abilities"] as! [[String: Any]] {
+            let newAbility = (ability["ability"] as! [String: Any])["name"] as! String
+            self.abilities.append(newAbility)
+        }
+        for type in pokemonDict["types"] as! [[String: Any]] {
+            let newType = (type["type"] as! [String: Any])["name"] as! String
+            self.types.append(newType)
+        }
+        self.height = pokemonDict["height"] as! Int
+        self.weight = pokemonDict["weight"] as! Int
+    }
+    
+    var color : UIColor {
+        switch self.types[0] {
+        case "normal": return UIColor(hex:"#797964")
+        case "fire": return UIColor(hex:"#d52100")
+        case "water": return UIColor(hex:"#0080ff")
+        case "electric": return UIColor(hex:"#c90")
+        case "grass": return UIColor(hex:"#5cb737")
+        case "ice": return UIColor(hex:"#0af")
+        case "fighting": return UIColor(hex:"#a84d3d")
+        case "poison": return UIColor(hex:"#88447a")
+        case "ground": return UIColor(hex:"#bf9926")
+        case "flying": return UIColor(hex:"#556dff")
+        case "psychic": return UIColor(hex:"#ff227a")
+        case "bug": return UIColor(hex:"#83901a")
+        case "rock": return UIColor(hex:"#a59249")
+        case "ghost": return UIColor(hex:"#5454b3")
+        case "dragon": return UIColor(hex:"#4e38e9")
+        case "dark": return UIColor(hex:"#573e31")
+        case "steel": return UIColor(hex:"#8e8ea4")
+        case "fairy": return UIColor(hex:"#e76de7")
+        default:
+            return .systemIndigo
+        }
     }
 }
 
