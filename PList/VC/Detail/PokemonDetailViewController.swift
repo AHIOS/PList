@@ -23,7 +23,6 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
-//        setupLayout()
         loadData()
     }
     
@@ -37,14 +36,14 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
     private func loadData(){
         if let itemId = pokemonId{
             DataRetriever.fetchItem(id: itemId) { pokemonDict in
-                //if still transitioning delay the UI update
-                if (self.appeared){
-                    self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
-                }else{
+//                //if still transitioning delay the UI update
+//                if (self.appeared){
+//                    self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
+//                }else{
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
                     }
-                }
+//                }
             }
             DataRetriever.getImageDataForItem(id: itemId, completion: { data in
                 guard let data = data else { return }
@@ -62,6 +61,8 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
             (self.view as! PokemonDetailView).set(name:self.pokemonVM!.name)
             let type = self.pokemonVM?.types[0]
             (self.view as! PokemonDetailView).set(type:type!)
+            (self.view as! PokemonDetailView).set(stats: self.pokemonVM!.stats)
+            
 //            (self.view as! PokemonDetailView).set(image:type!)
             
 //            self.view.backgroundColor = color?.withAlphaComponent(0.75)
@@ -85,7 +86,6 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
         return self.view as! PokemonDetailView
     }
 
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -93,20 +93,5 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
     override func loadView() {
         view = PokemonDetailView()
     }
-    
-//    private func setupLayout{
-//
-//    }
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

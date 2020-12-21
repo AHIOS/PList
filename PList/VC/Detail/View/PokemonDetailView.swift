@@ -11,6 +11,7 @@ import PinLayout
 class PokemonDetailView: UIView {
     private let spacerView = PokemonDetailSpacerView()
     private let headerView = PokemonDetailHeaderView()
+    private let statsView = StatsView()
     private let roundedView = UIView()
     var imageView = UIImageView()
 
@@ -20,7 +21,9 @@ class PokemonDetailView: UIView {
         addSubview(headerView)
         addSubview(roundedView)
         addSubview(imageView)
-        self.pin.all(pin.safeArea)
+        addSubview(statsView)
+        statsView.backgroundColor = .purple
+        self.pin.all()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -29,9 +32,10 @@ class PokemonDetailView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        headerView.pin.below(of: spacerView, aligned: .center).bottom().width(of:spacerView)
+        headerView.pin.below(of: spacerView, aligned: .center).height(10%).width(of:spacerView)
         roundedView.pin.bottomCenter(to:spacerView.anchor.bottomCenter).width(of:spacerView).height(30).width(of:spacerView)
         imageView.pin.bottomCenter(to:spacerView.anchor.bottomCenter).width(200).height(200)
+        statsView.pin.below(of: headerView, aligned: .center).bottom().width(of:spacerView)
     }
     
     func setPrimaryColor(color:UIColor){
@@ -51,5 +55,9 @@ class PokemonDetailView: UIView {
     
     func set(image:UIImage){
         imageView.image = image
+    }
+    
+    func set(stats:[Stat]){
+        statsView.configure(stats: stats)
     }
 }
