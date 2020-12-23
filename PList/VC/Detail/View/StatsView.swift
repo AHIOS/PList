@@ -9,7 +9,7 @@ import UIKit
 
 class StatsView: UIView {
 
-    private let tableView = UITableView()
+    let tableView = UITableView()
     private let methodCellTemplate = StatCell()
     
     private var stats: [Stat] = []

@@ -22,7 +22,7 @@ class PokemonDetailView: UIView {
         addSubview(roundedView)
         addSubview(imageView)
         addSubview(statsView)
-        statsView.backgroundColor = .purple
+        roundedView.roundCorners([.topLeft, .topRight], radius: 15)
         self.pin.all()
     }
     
@@ -32,6 +32,7 @@ class PokemonDetailView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        spacerView.pin.top(pin.safeArea).hCenter().width(100%).aspectRatio(1.5)
         headerView.pin.below(of: spacerView, aligned: .center).height(10%).width(of:spacerView)
         roundedView.pin.bottomCenter(to:spacerView.anchor.bottomCenter).width(of:spacerView).height(30).width(of:spacerView)
         imageView.pin.bottomCenter(to:spacerView.anchor.bottomCenter).width(200).height(200)

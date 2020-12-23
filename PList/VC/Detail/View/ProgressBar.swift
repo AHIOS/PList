@@ -4,7 +4,7 @@ import UIKit
 class ProgressBar: UIView {
     var color: UIColor = .gray {
         didSet {
-            gradientColor = color.darker(by: 5)!
+            gradientColor = color.darker(by: 10)!
             backgroundColor = color.lighter(by: 30)?.colorWithBrightnessFactor(factor: 0.7).withAlphaComponent(0.6)
             setNeedsDisplay()
         }

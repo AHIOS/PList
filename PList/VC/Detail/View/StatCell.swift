@@ -23,16 +23,11 @@ class StatCell: UITableViewCell {
         
         nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
         contentView.addSubview(nameLabel)
-        nameLabel.text = "ATTACK"
         nameLabel.textAlignment = .right
-        nameLabel.sizeToFit()
         
         valueLabel.font = UIFont.systemFont(ofSize: 14)
         contentView.addSubview(valueLabel)
-        valueLabel.text = " 75 "
-        valueLabel.sizeToFit()
         
-//        progress.progress = 0.75
         progress.backgroundColor = .systemGray
         contentView.addSubview(progress)
     }
@@ -42,12 +37,13 @@ class StatCell: UITableViewCell {
     }
     
     func configure(stat: Stat) {
-        nameLabel.text = stat.name
+        nameLabel.text = stat.nameTxt
         valueLabel.text = String(stat.value)
         nameLabel.sizeToFit()
         valueLabel.sizeToFit()
-        let percentage = CGFloat(stat.value)/120
-        progress.color = UIColor.red.toColor(.green, percentage: CGFloat(stat.value))
+        let percentage = CGFloat(stat.value)/200 //don't know stats max value
+        progress.color = stat.color
+        // Color based on percentage    UIColor.red.toColor(.green, percentage: CGFloat(stat.value))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.progress.progress = percentage
         }
@@ -59,7 +55,7 @@ class StatCell: UITableViewCell {
     }
     
     private func layout() {
-        valueLabel.pin.marginHorizontal(5).right(10).vCenter().width(25)
+        valueLabel.pin.marginHorizontal(5).right(10).vCenter().width(28)
         progress.pin.before(of: valueLabel, aligned: .center).marginHorizontal(5).width(55%).height(30%)
         nameLabel.pin.before(of: progress).marginHorizontal(5).left(10).vCenter()
         

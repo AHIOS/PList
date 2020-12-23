@@ -20,7 +20,6 @@ class PokemonDetailSpacerView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.pin.top(pin.safeArea).hCenter().width(100%).aspectRatio(1.5)
     }
     
     func setBackground(color: UIColor) {

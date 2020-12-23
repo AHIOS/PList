@@ -27,9 +27,37 @@ struct Stat{
     var color: UIColor {
         switch name {
         case "hp":
-            return .red
+            return UIColor(hex: "#58E810")
+        case "attack":
+            return UIColor(hex: "#EACA2F")
+        case "defense":
+            return UIColor(hex: "#E5721D")
+        case "special-attack":
+            return UIColor(hex: "#26BAE0")
+        case "special-defense":
+            return UIColor(hex: "#4C6CD4")
+        case "speed":
+            return UIColor(hex: "#EF8DEC")
         default:
-            return.blue
+            return .gray
+        }
+    }
+    var nameTxt: String {
+        switch name {
+        case "hp":
+            return "HP"
+        case "attack":
+            return "Attack"
+        case "defense":
+            return "Defense"
+        case "special-attack":
+            return "Sp. Attack"
+        case "special-defense":
+            return "Sp. Defense"
+        case "speed":
+            return "Speed"
+        default:
+            return name
         }
     }
     

@@ -17,7 +17,8 @@ class MainCoordinator: Coordinator {
     }
 
     func start() {
-        let vc = PokemonTableViewController.instantiate()
+//        let vc = PokemonTableViewController.instantiate()
+        let vc = PokeDeckViewController()
         vc.coordinator = self
         navigationController.pushViewController(vc, animated: false)
     }
