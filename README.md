@@ -15,10 +15,19 @@
 	- [/] Add State management
 
 ### 3. [ ] Improve UI/UX
-	- [ ] Pick a dependency manager (cocoapods or carthage)
-	- [ ] Try PinLayout
+	- [x] Pick a dependency manager (cocoapods or carthage)
+	- [x] Try PinLayout
 	- [ ] Add custom Font
-	- [ ] Add some animation
+	- [x] Add some animation
 	- [ ] Add search
 
 ### 4. [ ] ...
+
+
+## v2
+- [ ] Improve MVVM architecture
+- [ ] Split data retriever into a network client and a persistency manager
+- [ ] Add filter on type, and pagination for grid view
+- [ ] Header with parallax for detail screen
+- [ ] Test Test Test!!!
+- [ ] Add a 3D AR screen with models from [here](https://www.models-resource.com/3ds/pokemonxy/)
