@@ -11,7 +11,7 @@ import UIKit
 struct PokemonViewModel {
     let id: Int
     var idLblStr: String{
-        return "\(id)"
+        return "#\(id)"
     }
     let name: String
     
@@ -79,6 +79,7 @@ struct PokemonDetailViewModel {
     var abilities = [String]()
     let height: Int
     let weight: Int
+    var image: UIImage?
     
     init(with pokemonDict:[String: Any]) {
         self.name = (pokemonDict["name"] as! String).capitalized

@@ -23,6 +23,7 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
+        self.view.backgroundColor = .systemBackground
         loadData()
     }
     
@@ -36,14 +37,16 @@ class PokemonDetailViewController: UIViewController, Storyboarded {
     private func loadData(){
         if let itemId = pokemonId{
             DataRetriever.fetchItem(id: itemId) { pokemonDict in
+                
 //                //if still transitioning delay the UI update
 //                if (self.appeared){
 //                    self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
 //                }else{
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
-                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                        self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
+//                    }
 //                }
+                self.pokemonVM = PokemonDetailViewModel(with: pokemonDict)
             }
             DataRetriever.getImageDataForItem(id: itemId, completion: { data in
                 guard let data = data else { return }

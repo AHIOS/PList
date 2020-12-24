@@ -16,17 +16,17 @@ class PokeCardCell: UICollectionViewCell {
     private let typeLabel = UILabel()
     private var primaryColor = UIColor()
     
-    let hardcodedtype = "grass"
+    let hardcodedtype = "fighting"
     
     private let margin: CGFloat = 8
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        primaryColor = .orange
+        primaryColor = .systemGray
 
         nameLabel.font = UIFont.boldSystemFont(ofSize: 18)
-        nameLabel.textColor = .systemBackground
+        nameLabel.textColor = .white
         nameLabel.numberOfLines = 0
         nameLabel.lineBreakMode = .byWordWrapping
         contentView.addSubview(nameLabel)
@@ -34,49 +34,66 @@ class PokeCardCell: UICollectionViewCell {
         mainImage.backgroundColor = .clear
         mainImage.contentMode = .scaleAspectFill
         mainImage.clipsToBounds = true
+        mainImage.image = UIImage(named: "placeholder")
         contentView.addSubview(mainImage)
         
         typeLabel.font = UIFont.systemFont(ofSize: 18)
-        typeLabel.textColor = .systemBackground
+        typeLabel.textColor = .white
+        typeLabel.backgroundColor = UIColor.white.withAlphaComponent(0.25)
         contentView.addSubview(typeLabel)
         
         self.layer.cornerRadius = margin
         self.clipsToBounds = true
         
-        if (traitCollection.userInterfaceStyle == .light){
-            typeLabel.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.25)
-        }else{
-            typeLabel.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.15)
-        }
-        
-    
-        
-        //Todo:  ADD shadow
+        setShadow()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(poke: Poke) {
+    func configure(poke: PokemonDetailViewModel) {
         nameLabel.text = poke.name
         nameLabel.sizeToFit()
         DataRetriever.getImageDataForItem(id: poke.id) { [self] data in
-            mainImage.image = UIImage(data: data!)
+            DispatchQueue.main.async {
+                mainImage.image = UIImage(data: data!)
+            }
         }
         mainImage.contentMode = .scaleAspectFill
         mainImage.backgroundColor = .clear
         
-        typeLabel.text = " \(hardcodedtype) "
+        typeLabel.text = "  \(poke.types[0])  "
         typeLabel.layer.cornerRadius = typeLabel.frame.size.height/2
         typeLabel.sizeToFit()
         typeLabel.clipsToBounds = true
         
-        primaryColor = .orange
+        primaryColor = poke.color
         backgroundColor = primaryColor
+        self.layer.shadowColor = primaryColor.cgColor
         
         setNeedsLayout()
     }
+    
+//    func configure(pokeVM: PokemonDetailViewModel) {
+//        nameLabel.text = pokeVM.name
+//        nameLabel.sizeToFit()
+//        DataRetriever.getImageDataForItem(id: pokeVM.id) { [self] data in
+//            mainImage.image = UIImage(data: data!)
+//        }
+//        mainImage.contentMode = .scaleAspectFill
+//        mainImage.backgroundColor = .clear
+//
+//        typeLabel.text = "  \(pokeVM.types[0] ?? hardcodedtype)  "
+//        typeLabel.layer.cornerRadius = typeLabel.frame.size.height/2
+//        typeLabel.sizeToFit()
+//        typeLabel.clipsToBounds = true
+//
+//        backgroundColor = primaryColor
+//        self.layer.shadowColor = primaryColor.cgColor
+//
+//        setNeedsLayout()
+//    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -84,8 +101,8 @@ class PokeCardCell: UICollectionViewCell {
     }
     
     private func layout() {
-        mainImage.pin.bottomRight(4).height(60).aspectRatio()
-        typeLabel.pin.left(margin).bottom(20)
+        mainImage.pin.bottomRight(margin/2).height(60).aspectRatio()
+        typeLabel.pin.left(margin*2).bottom(margin*3)
         nameLabel.pin.topLeft(margin).right()
         nameLabel.sizeToFit()
         
@@ -99,6 +116,22 @@ class PokeCardCell: UICollectionViewCell {
         contentView.pin.width(size.width)
         layout()
         return contentView.frame.size
+    }
+    
+    func setShadow(){
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.75
+        self.layer.shadowOffset = CGSize(width: 2, height: 2)
+        self.layer.shadowRadius = 2
+        self.layer.masksToBounds = false
+        self.layer.shouldRasterize = true
+        self.layer.rasterizationScale = UIScreen.main.scale
+        
+        mainImage.layer.shadowColor = UIColor.black.cgColor
+        mainImage.layer.shadowOpacity = 0.3
+        mainImage.layer.shadowOffset = .zero
+        mainImage.layer.shadowRadius = 3
+
     }
 }
 

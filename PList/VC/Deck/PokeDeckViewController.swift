@@ -9,10 +9,13 @@ import UIKit
 
 class PokeDeckViewController: UIViewController {
     
-    var pokeVM : PokemonDetails?
+    var pokeVMs = [PokemonViewModel]()
+    var pokeDetailVMs = [PokemonDetailViewModel]()
     
     private var mainView: PokeDeckView {
-        return self.view as! PokeDeckView
+        let pDeckView = self.view as! PokeDeckView
+        pDeckView.coordinator = self.coordinator
+        return pDeckView
     }
     
     //Navigation
@@ -22,25 +25,15 @@ class PokeDeckViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        let rightButton = UIBarButtonItem(title:"switch", style: .plain, target: self, action: nil)
+        self.navigationController!.navigationItem.rightBarButtonItem = rightButton
+        
     }
     
     override func loadView() {
         view = PokeDeckView()
         
-        mainView.configure(pokes: [
-            Poke(name: "Bulbasaur 1234567890 1234567890", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil),
-            Poke(name: "Bulbasaur", url: "https://pokeres.bastionbot.org/images/pokemon/1", details: nil)
-        ])
+        loadData()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -57,5 +50,30 @@ class PokeDeckViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func reloadUI() {
+        if (self.pokeDetailVMs.count == 50){
+            DispatchQueue.main.async {
+                self.mainView.configure(pokes: self.pokeDetailVMs)
+            }
+        }
+    }
+    
+    private func loadData(){
+        DataRetriever.fetchList(limit: 50, offset:0){ pList in
+            let fetched = pList.results
+            let vms = fetched.map { model -> PokemonViewModel in
+                DataRetriever.fetchItem(id: model.id) { pokemonDict in
+                    let pokeDetVM = PokemonDetailViewModel(with: pokemonDict)
+                        self.pokeDetailVMs.append(pokeDetVM)
+                    self.reloadUI()
+//                    })
+                }
+                return PokemonViewModel(with: model)
+            }
+            self.pokeVMs.append(contentsOf: vms)
+            
+        }
+    }
 
 }

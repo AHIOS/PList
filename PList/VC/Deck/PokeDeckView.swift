@@ -13,7 +13,13 @@ class PokeDeckView: UIView {
     private let flowLayout = UICollectionViewFlowLayout()
     private let cellTemplate = PokeCardCell()
     
-    private var pokes: [Poke] = []
+    private var pokes: [PokemonDetailViewModel] = []{
+        didSet{
+            self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+        }
+    }
+    
+    weak var coordinator: MainCoordinator?
     
     init() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -21,8 +27,8 @@ class PokeDeckView: UIView {
         super.init(frame: .zero)
         backgroundColor = .systemBackground
         
-        flowLayout.minimumLineSpacing = 8
-        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.minimumLineSpacing = 10
+        flowLayout.minimumInteritemSpacing = 4
         
         if #available(iOS 11.0, tvOS 11.0, *) {
             flowLayout.sectionInsetReference = .fromSafeArea
@@ -39,9 +45,8 @@ class PokeDeckView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(pokes: [Poke]) {
+    func configure(pokes: [PokemonDetailViewModel]) {
         self.pokes = pokes
-        collectionView.reloadData()
     }
 
     func viewOrientationDidChange() {
@@ -50,12 +55,12 @@ class PokeDeckView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        collectionView.pin.all(pin.safeArea).margin(flowLayout.minimumLineSpacing)
+        collectionView.pin.all(pin.safeArea)//.margin(flowLayout.minimumLineSpacing)
     }
 }
 
 // MARK: UICollectionViewDelegate, UICollectionViewDataSource
-extension PokeDeckView: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+extension PokeDeckView: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pokes.count
     }
@@ -68,7 +73,15 @@ extension PokeDeckView: UICollectionViewDelegateFlowLayout, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         cellTemplate.configure(poke: pokes[indexPath.row])
-        return cellTemplate.sizeThatFits(CGSize(width: (collectionView.bounds.width / 2) - 5, height: .greatestFiniteMagnitude))
+        return cellTemplate.sizeThatFits(CGSize(width: (collectionView.bounds.width / 2) - 8, height: .greatestFiniteMagnitude))
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 4, left: 3, bottom: 4, right: 3)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        coordinator?.showDetail(itemID: pokes[indexPath.row].id)
     }
 
 }
