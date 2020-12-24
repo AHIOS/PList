@@ -114,6 +114,7 @@ class PokemonTableViewController: UITableViewController, Storyboarded {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let pokemonVM = pokemonVMs[indexPath.row]
         coordinator?.showDetail(itemID: pokemonVM.id)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
 }

@@ -11,13 +11,60 @@ import UIKit
 struct PokemonViewModel {
     let id: Int
     var idLblStr: String{
-        return "\(id)"
+        return "#\(id)"
     }
     let name: String
     
     init(with pokemon:Pokemon) {
         self.name = pokemon.name
         self.id = pokemon.id
+    }
+}
+
+struct Stat{
+    let name: String
+    let value: Int
+    var color: UIColor {
+        switch name {
+        case "hp":
+            return UIColor(hex: "#58E810")
+        case "attack":
+            return UIColor(hex: "#EACA2F")
+        case "defense":
+            return UIColor(hex: "#E5721D")
+        case "special-attack":
+            return UIColor(hex: "#26BAE0")
+        case "special-defense":
+            return UIColor(hex: "#4C6CD4")
+        case "speed":
+            return UIColor(hex: "#EF8DEC")
+        default:
+            return .gray
+        }
+    }
+    var nameTxt: String {
+        switch name {
+        case "hp":
+            return "HP"
+        case "attack":
+            return "Attack"
+        case "defense":
+            return "Defense"
+        case "special-attack":
+            return "Sp. Attack"
+        case "special-defense":
+            return "Sp. Defense"
+        case "speed":
+            return "Speed"
+        default:
+            return name
+        }
+    }
+    
+    init(with dict:[String:Any]) {
+        let subDict = dict["stat"] as! [String:Any]
+        name = subDict["name"] as! String
+        value = dict["base_stat"] as! Int
     }
 }
 
@@ -32,33 +79,27 @@ struct PokemonDetailViewModel {
     var abilities = [String]()
     let height: Int
     let weight: Int
-    
-    struct Stat{
-        let name: String
-        let value: Int
-        
-        init(with dict:[String:Any]) {
-            let subDict = dict["stat"] as! [String:Any]
-            name = subDict["name"] as! String
-            value = dict["base_stat"] as! Int
-        }
-    }
+    var image: UIImage?
     
     init(with pokemonDict:[String: Any]) {
         self.name = (pokemonDict["name"] as! String).capitalized
         self.id = pokemonDict["id"] as! Int
+        
         for statDict in pokemonDict["stats"] as! [[String: Any]] {
             let newStat = Stat(with:statDict)
             self.stats.append(newStat)
         }
+        
         for ability in pokemonDict["abilities"] as! [[String: Any]] {
             let newAbility = (ability["ability"] as! [String: Any])["name"] as! String
             self.abilities.append(newAbility)
         }
+        
         for type in pokemonDict["types"] as! [[String: Any]] {
             let newType = (type["type"] as! [String: Any])["name"] as! String
             self.types.append(newType)
         }
+        
         self.height = pokemonDict["height"] as! Int
         self.weight = pokemonDict["weight"] as! Int
     }
