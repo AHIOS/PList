@@ -12,6 +12,8 @@ class PokeDeckViewController: UIViewController {
     var pokeVMs = [PokemonViewModel]()
     var pokeDetailVMs = [PokemonDetailViewModel]()
     
+    var service: PokemonServiceProtocol?
+    
     private var mainView: PokeDeckView {
         let pDeckView = self.view as! PokeDeckView
         pDeckView.coordinator = self.coordinator
@@ -25,13 +27,24 @@ class PokeDeckViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let rightButton = UIBarButtonItem(title:"switch", style: .plain, target: self, action: nil)
-        self.navigationController!.navigationItem.rightBarButtonItem = rightButton
+//        let rightButton = UIBarButtonItem(title:"switch", style: .plain, target: self, action: nil)
+//        self.navigationItem.rightBarButtonItem = rightButton
         
     }
     
     override func loadView() {
         view = PokeDeckView()
+        // here only for testing pupose
+        service = PokemonService()
+        service!.fetchPokemons{ result in
+            switch result {
+            case .success(let list):
+                print(list)
+            case .failure(let error):
+                debugPrint(error)
+            }
+            
+        }
         
         loadData()
     }
